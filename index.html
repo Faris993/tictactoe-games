@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tic Tac Toe</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div id="game">
+		<div class="row">
+			<div class="cell" id="00"></div>
+			<div class="cell" id="01"></div>
+			<div class="cell" id="02"></div>
+		</div>
+		<div class="row">
+			<div class="cell" id="10"></div>
+			<div class="cell" id="11"></div>
+			<div class="cell" id="12"></div>
+		</div>
+		<div class="row">
+			<div class="cell" id="20"></div>
+			<div class="cell" id="21"></div>
+			<div class="cell" id="22"></div>
+		</div>
+	</div>
+
+	<script>
+		let currentPlayer = "X";
+		let gameEnded = false;
+
+		function handleCellClick(event) {
+			const cell = event.target;
+
+			if (cell.innerText !== "" || gameEnded) {
+				return;
+			}
+
+			cell.innerText = currentPlayer;
+
+			if (checkWin()) {
+				showMessage(`Player ${currentPlayer} won!`);
+				gameEnded = true;
+				return;
+			}
+
+			if (checkDraw()) {
+				showMessage("It's a draw!");
+				gameEnded = true;
+				return;
+			}
+
+			currentPlayer = currentPlayer === "X" ? "O" : "X";
+		}
+
+		function checkWin() {
+			const cells = document.querySelectorAll(".cell");
+
+			const winPatterns = [
+				[0, 1, 2],
+				[3, 4, 5],
+				[6, 7, 8],
+				[0, 3, 6],
+				[1, 4, 7],
+				[2, 5, 8],
+				[0, 4, 8],
+				[2, 4, 6],
+			];
+
+			return winPatterns.some(pattern => {
+				return pattern.every(index => {
+					return cells[index].innerText === currentPlayer;
+				});
+			});
+		}
+
+		function checkDraw() {
+			const cells = document.querySelectorAll(".cell");
+
+			return Array.from(cells).every(cell => {
+				return cell.innerText !== "";
+			});
+		}
+
+		function showMessage(message) {
+			const messageElement = document.createElement("div");
+			messageElement.id = "message";
+			messageElement.innerText = message;
+			document.body.appendChild(messageElement);
+		}
+
+		const cells = document.querySelectorAll(".cell");
+		cells.forEach(cell => {
+			cell.addEventListener("click", handleCellClick);
+		});
+	</script>
+</body>
+</html>
